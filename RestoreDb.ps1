@@ -1,15 +1,15 @@
 <#
-	.SYNOPSIS
-		Restoring the database on the SQL Server.
-	.DESCRIPTION
+    .SYNOPSIS
+        Restoring the database on the SQL Server.
+    .DESCRIPTION
         Restoring the database on the SQL server.
-	.PARAMETER backup
+    .PARAMETER backup
         The name of the database backup file.
-	.PARAMETER serverInstance
+    .PARAMETER serverInstance
         SQL Server instance.
-	.PARAMETER backupDir
-		The directory of the backup files.        
-	.PARAMETER databaseName
+    .PARAMETER backupDir
+        The directory of the backup files.        
+    .PARAMETER databaseName
         The name of the target database.
     .PARAMETER dryRun
         Specifies whether to run the script in dry mode.
@@ -144,7 +144,7 @@ if (-not $dryRun) {
             "LogFilePath: " + $backupFileConfig.LogFilePath + $hr
         Write-Verbose $log
 
-		# Getting information about logical files of the database instance.
+        # Getting information about logical files of the database instance.
         $destinationDatabaseSetupQuery =
             "DECLARE @databaseName NVARCHAR(4000) = N'$databaseName', @dataFileName NVARCHAR(4000), @dataFilePath NVARCHAR(4000), @logFileName NVARCHAR(4000), @logFilePath NVARCHAR(4000)`r`n" +
             "SELECT @dataFileName = [name], @dataFilePath = [physical_name] FROM sys.master_files WHERE [type] = 0 AND [database_id] = DB_ID(@databaseName)`r`n" +
@@ -161,7 +161,7 @@ if (-not $dryRun) {
 
         $destinationDatabaseSetup = Invoke-Sqlcmd -ServerInstance $serverInstance -Query $destinationDatabaseSetupQuery -ErrorAction Stop
 
-		# If the target database instance does not exist, set the default values.
+        # If the target database instance does not exist, set the default values.
         if (-not $destinationDatabaseSetup) {
             $destinationDatabaseSetup = @{DataFilePath=(Join-Path -Path $dataDir -ChildPath "$($databaseName).mdf");LogFilePath = (Join-Path -Path $dataDir -ChildPath "$($databaseName)_log.ldf")}
         }
